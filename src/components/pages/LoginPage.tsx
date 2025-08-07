@@ -7,14 +7,21 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useAuth } from '@/contexts/AuthContext';
 import { User } from '@/types/pos';
 import { toast } from '@/hooks/use-toast';
+import { LogIn, UserPlus } from 'lucide-react';
 import abvLogo from '@/assets/abv-logo.png';
+import SignupPage from './SignupPage';
 
 const LoginPage: React.FC = () => {
+  const [currentView, setCurrentView] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<User['role']>('cashier');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
+
+  if (currentView === 'signup') {
+    return <SignupPage onBackToLogin={() => setCurrentView('login')} />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +53,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/10 to-accent/5 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <img 
@@ -62,7 +69,10 @@ const LoginPage: React.FC = () => {
 
         <Card className="pos-card">
           <CardHeader>
-            <CardTitle>Sign In</CardTitle>
+            <CardTitle className="flex items-center">
+              <LogIn className="h-5 w-5 mr-2" />
+              Sign In
+            </CardTitle>
             <CardDescription>
               Enter your credentials to access the POS system
             </CardDescription>
@@ -124,7 +134,21 @@ const LoginPage: React.FC = () => {
               </Button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-muted-foreground">
+            <div className="mt-6 pt-6 border-t border-border text-center">
+              <p className="text-sm text-muted-foreground mb-4">
+                Don't have an account?
+              </p>
+              <Button
+                variant="outline"
+                onClick={() => setCurrentView('signup')}
+                className="w-full flex items-center justify-center"
+              >
+                <UserPlus className="h-4 w-4 mr-2" />
+                Create New Account
+              </Button>
+            </div>
+
+            <div className="mt-4 text-center text-sm text-muted-foreground">
               <p>Demo Credentials: Use any email/password combination</p>
             </div>
           </CardContent>
