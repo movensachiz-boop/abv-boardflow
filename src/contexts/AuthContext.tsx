@@ -4,8 +4,7 @@ import { User } from '@/types/pos';
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string, role: User['role']) => Promise<boolean>;
-  signup: (name: string, email: string, password: string, role: User['role']) => Promise<{ success: boolean; needsVerification?: boolean }>;
-  verifyEmail: (email: string, code: string) => Promise<boolean>;
+  signup: (name: string, email: string, password: string, role: User['role']) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -32,7 +31,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (email && password) {
       const mockUser: User = {
         id: Date.now().toString(),
-        name: 'John Doe',
+        name: 'User',
         email,
         role,
       };
@@ -42,23 +41,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return false;
   };
 
-  const signup = async (name: string, email: string, password: string, role: User['role']) => {
+  const signup = async (name: string, email: string, password: string, role: User['role']): Promise<boolean> => {
     // Mock signup - in real app this would call an API
     if (name && email && password) {
-      // Simulate email verification requirement
-      return { success: true, needsVerification: true };
-    }
-    return { success: false };
-  };
-
-  const verifyEmail = async (email: string, code: string): Promise<boolean> => {
-    // Mock email verification - in real app this would verify the code
-    if (code === '123456') {
       const mockUser: User = {
         id: Date.now().toString(),
-        name: 'New User',
+        name,
         email,
-        role: 'cashier', // Default role for new signups
+        role,
       };
       setUser(mockUser);
       return true;
@@ -74,7 +64,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     user,
     login,
     signup,
-    verifyEmail,
     logout,
     isAuthenticated: !!user,
   };

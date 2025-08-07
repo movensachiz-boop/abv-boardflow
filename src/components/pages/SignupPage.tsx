@@ -15,7 +15,6 @@ interface SignupPageProps {
 }
 
 const SignupPage: React.FC<SignupPageProps> = ({ onBackToLogin }) => {
-  const [step, setStep] = useState<'signup' | 'verification' | 'success'>('signup');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,9 +22,8 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLogin }) => {
     confirmPassword: '',
     role: 'cashier' as User['role']
   });
-  const [verificationCode, setVerificationCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { signup, verifyEmail } = useAuth();
+  const { signup } = useAuth();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,12 +40,18 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLogin }) => {
     setIsLoading(true);
 
     try {
-      const result = await signup(formData.name, formData.email, formData.password, formData.role);
-      if (result.success && result.needsVerification) {
-        setStep('verification');
+      const success = await signup(formData.name, formData.email, formData.password, formData.role);
+      if (success) {
         toast({
-          title: "Account Created!",
-          description: "Please check your email for the verification code.",
+          title: "Account Created Successfully!",
+          description: "Welcome to ABV Boards POS System.",
+        });
+        // User will be automatically redirected due to auth state change
+      } else {
+        toast({
+          title: "Signup Failed",
+          description: "An error occurred during signup. Please try again.",
+          variant: "destructive",
         });
       }
     } catch (error) {
@@ -60,143 +64,6 @@ const SignupPage: React.FC<SignupPageProps> = ({ onBackToLogin }) => {
       setIsLoading(false);
     }
   };
-
-  const handleVerification = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const success = await verifyEmail(formData.email, verificationCode);
-      if (success) {
-        setStep('success');
-        toast({
-          title: "Email Verified!",
-          description: "Welcome to ABV Boards POS System.",
-        });
-        setTimeout(() => {
-          // User will be automatically redirected due to auth state change
-        }, 2000);
-      } else {
-        toast({
-          title: "Verification Failed",
-          description: "Invalid verification code. Please try again.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An error occurred during verification.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  if (step === 'success') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-muted/10 to-accent/5 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md pos-card text-center">
-          <CardContent className="pt-6">
-            <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="h-8 w-8 text-accent" />
-            </div>
-            <h2 className="text-2xl font-bold text-foreground mb-2">Welcome to ABV Boards!</h2>
-            <p className="text-muted-foreground mb-6">
-              Your account has been successfully verified. Redirecting to dashboard...
-            </p>
-            <div className="flex items-center justify-center space-x-2">
-              <div className="w-2 h-2 bg-accent rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-accent rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-              <div className="w-2 h-2 bg-accent rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (step === 'verification') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-muted/10 to-accent/5 flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <img 
-              src={abvLogo} 
-              alt="ABV Boards Zimbabwe" 
-              className="h-20 w-auto mx-auto mb-4"
-            />
-            <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-8 w-8 text-accent" />
-            </div>
-            <h1 className="text-3xl font-bold text-foreground">Check Your Email</h1>
-            <p className="text-muted-foreground mt-2">
-              We've sent a verification code to <strong>{formData.email}</strong>
-            </p>
-          </div>
-
-          <Card className="pos-card">
-            <CardHeader>
-              <CardTitle>Enter Verification Code</CardTitle>
-              <CardDescription>
-                Please enter the 6-digit code from your email
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleVerification} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="code">Verification Code</Label>
-                  <Input
-                    id="code"
-                    type="text"
-                    placeholder="123456"
-                    value={verificationCode}
-                    onChange={(e) => setVerificationCode(e.target.value)}
-                    className="text-center text-lg tracking-wider"
-                    maxLength={6}
-                    required
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  className="w-full pos-action-btn"
-                  disabled={isLoading || verificationCode.length !== 6}
-                >
-                  {isLoading ? 'Verifying...' : 'Verify Email'}
-                </Button>
-
-                <div className="text-center space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    Didn't receive the code?
-                  </p>
-                  <Button variant="link" size="sm" className="text-accent">
-                    Resend Code
-                  </Button>
-                </div>
-              </form>
-
-              <div className="mt-6 pt-6 border-t border-border">
-                <Button
-                  variant="ghost"
-                  onClick={onBackToLogin}
-                  className="w-full flex items-center justify-center"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Login
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="mt-6 text-center text-sm text-muted-foreground">
-            <p>Demo: Use code <strong>123456</strong> to continue</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/10 to-accent/5 flex items-center justify-center p-4">
