@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { LogOut, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import abvLogo from '@/assets/abv-logo.png';
+const abvLogo = '/lovable-uploads/74b9aa4f-b004-47a3-a539-e9695446a2e2.png';
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();

@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { User } from '@/types/pos';
 import { toast } from '@/hooks/use-toast';
 import { ArrowLeft, Mail, CheckCircle, UserPlus } from 'lucide-react';
-import abvLogo from '@/assets/abv-logo.png';
+const abvLogo = '/lovable-uploads/74b9aa4f-b004-47a3-a539-e9695446a2e2.png';
 
 interface SignupPageProps {
   onBackToLogin: () => void;
