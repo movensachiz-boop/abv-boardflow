@@ -34,21 +34,53 @@ const ExcelImportDialog: React.FC = () => {
 
   const downloadTemplate = () => {
     const template = [
-      {
-        name: 'Example Product Name',
-        code: 'PROD-001',
-        category: 'Board',
-        size: '120x240 cm',
-        price: 45.50,
-        stock: 25,
-        image: 'https://example.com/image.jpg (optional)'
-      }
+      { name: 'Board - Coimbra Matt', code: 'BC-MM', category: 'Board', size: '2440x1220mm', price: 75.00, stock: 45 },
+      { name: 'Board - Petrol Blue Matt', code: 'BP-BM', category: 'Board', size: '2440x1220mm', price: 75.00, stock: 32 },
+      { name: 'Board - Smoked Cedar', code: 'BS-CM', category: 'Board', size: '2440x1220mm', price: 75.00, stock: 28 },
+      { name: 'Board - Harvard Cherry Matt', code: 'BH-CM', category: 'Board', size: '2440x1220mm', price: 75.00, stock: 36 },
+      { name: 'Board - Greythorne Matt', code: 'BG-MM', category: 'Board', size: '2440x1220mm', price: 75.00, stock: 42 },
+      { name: 'Edging - White Off Matt', code: 'EW-OM', category: 'Edging', size: '2.2mmx19mm', price: 0.80, stock: 125 },
+      { name: 'Edging - White Off Matt - 0.4mm', code: 'EW-04', category: 'Edging', size: '0.4mmx19mm', price: 0.50, stock: 210 },
+      { name: 'Edging - White Off Matt - 32mm', code: 'EW-32', category: 'Edging', size: '32mmx19mm', price: 2.00, stock: 78 },
+      { name: 'Edging - Black Matt', code: 'EB-MM', category: 'Edging', size: '2.2mmx19mm', price: 0.80, stock: 95 },
+      { name: 'Quartz Star Black', code: 'QS-BK', category: 'Quartz', size: '3000x1400mm', price: 195.00, stock: 8 },
+      { name: 'Quartz Star Gray', code: 'QS-GY', category: 'Quartz', size: '3000x1400mm', price: 200.00, stock: 6 },
+      { name: 'Quartz Star White', code: 'QS-WH', category: 'Quartz', size: '3000x1400mm', price: 195.00, stock: 10 },
+      { name: 'Kitchen Bin - 46L', code: 'KB-46', category: 'Accessory', size: '460x350mm', price: 25.00, stock: 15 },
+      { name: 'Spice rack', code: 'SR-01', category: 'Accessory', size: '300x100mm', price: 65.00, stock: 22 },
+      { name: '6R Wine rack', code: 'WR-06', category: 'Accessory', size: '400x300mm', price: 15.00, stock: 30 },
+      { name: '9R Wine rack', code: 'WR-09', category: 'Accessory', size: '600x300mm', price: 20.00, stock: 18 },
+      { name: 'Tie rail', code: 'TR-01', category: 'Accessory', size: '1000x30mm', price: 1.00, stock: 50 },
+      { name: '192 Steel handles', code: 'HB-192', category: 'Hardware', size: '192mm', price: 2.00, stock: 65 },
+      { name: '288 Steel handles', code: 'HB-288', category: 'Hardware', size: '288mm', price: 2.50, stock: 48 },
+      { name: 'Nordic handles 1m', code: 'NH-1M', category: 'Hardware', size: '1000mm', price: 18.00, stock: 12 },
+      { name: '90 Deg hinge', code: 'HG-90', category: 'Hardware', size: 'Standard', price: 1.50, stock: 85 },
+      { name: '165 Deg hinge', code: 'HG-165', category: 'Hardware', size: 'Standard', price: 1.50, stock: 72 },
+      { name: 'Pack 40mm Screws', code: 'SC-40', category: 'Hardware', size: '40mm', price: 12.00, stock: 25 },
+      { name: 'PVC legs-100', code: 'PL-100', category: 'Hardware', size: '100mm', price: 3.50, stock: 38 },
+      { name: 'PVC legs-150', code: 'PL-150', category: 'Hardware', size: '150mm', price: 4.50, stock: 29 },
+      { name: 'Woodfiller white', code: 'WF-WH', category: 'Consumable', size: '500ml', price: 3.50, stock: 42 },
+      { name: 'Silicone white', code: 'SL-WH', category: 'Consumable', size: '310ml', price: 3.50, stock: 35 },
+      { name: 'Glue (kg)', code: 'GL-BK', category: 'Consumable', size: '1kg', price: 4.50, stock: 20 },
+      { name: 'Cutting fee', code: 'CF-01', category: 'Service', size: 'N/A', price: 9.00, stock: 0 },
+      { name: 'Push to Open', code: 'PT-01', category: 'Hardware', size: 'Standard', price: 1.00, stock: 40 },
+      { name: 'Fluted panel - grey', code: 'FP-GY', category: 'Panel', size: '2440x1220mm', price: 10.00, stock: 18 },
+      { name: 'Fluted panel - black', code: 'FP-BK', category: 'Panel', size: '2440x1220mm', price: 13.50, stock: 12 },
+      { name: '198 Roman handles', code: 'RH-198', category: 'Hardware', size: '198mm', price: 2.50, stock: 25 },
+      { name: 'Gas hinges', code: 'GH-01', category: 'Hardware', size: 'Standard', price: 3.00, stock: 32 },
+      { name: 'Airvents', code: 'AV-01', category: 'Hardware', size: 'Standard', price: 4.00, stock: 28 },
+      { name: 'Hanger rail chrome', code: 'HC-CR', category: 'Hardware', size: '1000mm', price: 5.00, stock: 15 },
+      { name: 'Top guide', code: 'TG-01', category: 'Hardware', size: 'Standard', price: 27.00, stock: 8 },
+      { name: 'Bottom guide', code: 'BG-01', category: 'Hardware', size: 'Standard', price: 25.00, stock: 8 },
+      { name: 'Wheel sets', code: 'WS-01', category: 'Hardware', size: 'Standard', price: 17.00, stock: 12 },
+      { name: 'Quartz glue black', code: 'QG-BK', category: 'Consumable', size: '500ml', price: 3.00, stock: 18 },
+      { name: 'Quartz glue white', code: 'QG-WH', category: 'Consumable', size: '500ml', price: 4.00, stock: 15 }
     ];
 
     const ws = XLSX.utils.json_to_sheet(template);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Products Template');
-    XLSX.writeFile(wb, 'products_template.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'ABV Products');
+    XLSX.writeFile(wb, 'abv_products_import.xlsx');
   };
 
   const validateProduct = (row: any, index: number): { valid: boolean; errors: string[] } => {
