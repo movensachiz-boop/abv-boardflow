@@ -92,17 +92,26 @@ const ExcelImportDialog: React.FC = () => {
   const handleImport = async () => {
     if (!file) return;
 
+    console.log('Starting Excel import for file:', file.name, 'Size:', file.size);
+    
     setImporting(true);
     setProgress(0);
     setResult(null);
 
     try {
+      console.log('Reading file as array buffer...');
       const data = await file.arrayBuffer();
+      console.log('Array buffer size:', data.byteLength);
+      
+      console.log('Parsing Excel workbook...');
       const workbook = XLSX.read(data);
+      console.log('Workbook sheet names:', workbook.SheetNames);
+      
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      console.log('Worksheet object:', worksheet);
+      
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-      console.log('Excel data parsed:', jsonData);
+      console.log('Excel data parsed:', jsonData, 'Row count:', jsonData.length);
 
       // Filter out empty rows and rows without required fields
       const validRows = jsonData.filter((row: any) => {
