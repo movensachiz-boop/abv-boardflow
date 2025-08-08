@@ -55,48 +55,70 @@ export const useAddSale = () => {
 
   return useMutation({
     mutationFn: async (sale: Omit<Sale, 'id' | 'createdAt'>) => {
-      const { data: saleData, error: saleError } = await supabase
-        .from('sales')
-        .insert({
-          subtotal: sale.subtotal,
-          discount: sale.discount,
-          tax: sale.tax,
-          total: sale.total,
-          cashier_id: sale.cashierId,
-          cashier_name: sale.cashierName,
-          customer_name: sale.customerName,
-          notes: sale.notes,
-        })
-        .select()
-        .single();
+      console.log('Starting sale creation with data:', sale);
+      
+      try {
+        console.log('Inserting sale into database...');
+        const { data: saleData, error: saleError } = await supabase
+          .from('sales')
+          .insert({
+            subtotal: sale.subtotal,
+            discount: sale.discount,
+            tax: sale.tax,
+            total: sale.total,
+            cashier_id: sale.cashierId,
+            cashier_name: sale.cashierName,
+            customer_name: sale.customerName,
+            notes: sale.notes,
+          })
+          .select()
+          .single();
 
-      if (saleError) throw saleError;
+        if (saleError) {
+          console.error('Sale insert error:', saleError);
+          throw saleError;
+        }
+        
+        console.log('Sale created successfully:', saleData);
 
-      // Insert sale items
-      const saleItemsData = sale.items.map(item => ({
-        sale_id: saleData.id,
-        product_id: item.productId,
-        quantity: item.quantity,
-        unit_price: item.unitPrice,
-        total_price: item.totalPrice,
-      }));
-
-      const { error: itemsError } = await supabase
-        .from('sale_items')
-        .insert(saleItemsData);
-
-      if (itemsError) throw itemsError;
-
-      // Update product stock
-      for (const item of sale.items) {
-        const { error: stockError } = await supabase.rpc('update_product_stock', {
+        // Insert sale items
+        console.log('Inserting sale items:', sale.items.length, 'items');
+        const saleItemsData = sale.items.map(item => ({
+          sale_id: saleData.id,
           product_id: item.productId,
-          quantity_sold: item.quantity,
-        });
-        if (stockError) console.warn('Stock update failed:', stockError);
-      }
+          quantity: item.quantity,
+          unit_price: item.unitPrice,
+          total_price: item.totalPrice,
+        }));
 
-      return saleData;
+        const { error: itemsError } = await supabase
+          .from('sale_items')
+          .insert(saleItemsData);
+
+        if (itemsError) {
+          console.error('Sale items insert error:', itemsError);
+          throw itemsError;
+        }
+        
+        console.log('Sale items created successfully');
+
+        // Update product stock
+        console.log('Updating product stock...');
+        for (const item of sale.items) {
+          const { error: stockError } = await supabase.rpc('update_product_stock', {
+            product_id: item.productId,
+            quantity_sold: item.quantity,
+          });
+          if (stockError) console.warn('Stock update failed:', stockError);
+        }
+        
+        console.log('Stock updated successfully');
+        return saleData;
+        
+      } catch (error) {
+        console.error('Sale creation failed:', error);
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sales'] });
