@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://your-project.supabase.co'; // This will be auto-configured by Lovable
-const supabaseAnonKey = 'your-anon-key'; // This will be auto-configured by Lovable
+// Lovable will automatically configure these when connected to Supabase
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

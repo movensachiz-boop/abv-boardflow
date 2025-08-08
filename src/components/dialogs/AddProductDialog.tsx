@@ -29,6 +29,7 @@ const AddProductDialog: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Form submitted with data:', formData);
     
     try {
       await addProductMutation.mutateAsync({
@@ -41,6 +42,7 @@ const AddProductDialog: React.FC = () => {
         image: formData.image || undefined,
       });
       
+      console.log('Product added successfully, resetting form');
       setFormData({
         name: '',
         code: '',

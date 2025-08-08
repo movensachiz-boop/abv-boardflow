@@ -8,18 +8,31 @@ export const useProducts = () => {
   return useQuery({
     queryKey: ['products'],
     queryFn: async (): Promise<Product[]> => {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
+      console.log('Fetching products from Supabase...');
+      
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-      if (error) throw error;
+        if (error) {
+          console.error('Supabase error:', error);
+          throw error;
+        }
 
-      return data.map(product => ({
-        ...product,
-        createdAt: new Date(product.created_at),
-        updatedAt: new Date(product.updated_at),
-      }));
+        console.log('Supabase response:', data);
+
+        return data?.map(product => ({
+          ...product,
+          createdAt: new Date(product.created_at),
+          updatedAt: new Date(product.updated_at),
+        })) || [];
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        // Return empty array if table doesn't exist yet
+        return [];
+      }
     },
   });
 };
@@ -31,22 +44,34 @@ export const useAddProduct = () => {
 
   return useMutation({
     mutationFn: async (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
-      const { data, error } = await supabase
-        .from('products')
-        .insert({
-          name: product.name,
-          code: product.code,
-          category: product.category,
-          size: product.size,
-          price: product.price,
-          stock: product.stock,
-          image: product.image || null,
-        })
-        .select()
-        .single();
+      console.log('Adding product:', product);
+      
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .insert({
+            name: product.name,
+            code: product.code,
+            category: product.category,
+            size: product.size,
+            price: product.price,
+            stock: product.stock,
+            image: product.image || null,
+          })
+          .select()
+          .single();
 
-      if (error) throw error;
-      return data;
+        if (error) {
+          console.error('Supabase error:', error);
+          throw error;
+        }
+        
+        console.log('Product added successfully:', data);
+        return data;
+      } catch (error) {
+        console.error('Error adding product:', error);
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
