@@ -9,21 +9,26 @@ import {
   ShoppingCart 
 } from 'lucide-react';
 import { DashboardStats } from '@/types/pos';
+import { useDashboardStats } from '@/hooks/useSales';
 
 const Dashboard: React.FC = () => {
-  // Mock data - in real app this would come from an API
-  const stats: DashboardStats = {
-    todaySales: 15750.50,
-    weeklySales: 87245.25,
-    monthlySales: 324890.80,
-    totalProducts: 156,
-    lowStockItems: 8,
-    topSellingProducts: [
-      { product: { id: '1', name: 'Melamine Board 18mm', code: 'MB-18-001', category: 'Melamine', size: '120x240 cm', price: 45.50, stock: 25, createdAt: new Date(), updatedAt: new Date() }, quantitySold: 45 },
-      { product: { id: '2', name: 'Superwood Panel', code: 'SW-12-002', category: 'Superwood', size: '100x200 cm', price: 32.75, stock: 18, createdAt: new Date(), updatedAt: new Date() }, quantitySold: 38 },
-      { product: { id: '3', name: 'PVC Board White', code: 'PVC-W-003', category: 'PVC', size: '80x160 cm', price: 28.90, stock: 42, createdAt: new Date(), updatedAt: new Date() }, quantitySold: 32 },
-    ]
-  };
+  const { data: stats, isLoading, error } = useDashboardStats();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-lg">Loading dashboard...</div>
+      </div>
+    );
+  }
+
+  if (error || !stats) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-lg text-destructive">Error loading dashboard data</div>
+      </div>
+    );
+  }
 
   const statCards = [
     {

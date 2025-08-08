@@ -13,60 +13,23 @@ import {
   Filter
 } from 'lucide-react';
 import { Product } from '@/types/pos';
+import { useProducts, useDeleteProduct } from '@/hooks/useProducts';
+import AddProductDialog from '@/components/dialogs/AddProductDialog';
 
 const StockManagement: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-  // Mock data - in real app this would come from an API
-  const [products] = useState<Product[]>([
-    {
-      id: '1',
-      name: 'Melamine Board 18mm White',
-      code: 'MB-18-W-001',
-      category: 'Melamine',
-      size: '120x240 cm',
-      price: 45.50,
-      stock: 25,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    {
-      id: '2',
-      name: 'Superwood Panel Natural',
-      code: 'SW-12-N-002',
-      category: 'Superwood',
-      size: '100x200 cm',
-      price: 32.75,
-      stock: 5, // Low stock
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    {
-      id: '3',
-      name: 'PVC Board White',
-      code: 'PVC-W-003',
-      category: 'PVC',
-      size: '80x160 cm',
-      price: 28.90,
-      stock: 42,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    },
-    {
-      id: '4',
-      name: 'Fluted Panel Oak',
-      code: 'FP-OAK-004',
-      category: 'Fluted Panels',
-      size: '60x120 cm',
-      price: 65.20,
-      stock: 18,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }
-  ]);
+  const { data: products = [], isLoading, error } = useProducts();
+  const deleteProductMutation = useDeleteProduct();
 
   const categories = ['all', 'Melamine', 'Superwood', 'PVC', 'Fluted Panels', 'Other'];
+
+  const handleDeleteProduct = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      await deleteProductMutation.mutateAsync(id);
+    }
+  };
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -80,6 +43,22 @@ const StockManagement: React.FC = () => {
     if (stock <= 10) return <Badge variant="outline" className="border-orange-500 text-orange-600">Low Stock</Badge>;
     return <Badge variant="outline" className="border-green-500 text-green-600">In Stock</Badge>;
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-lg">Loading products...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-lg text-destructive">Error loading products</div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -96,10 +75,7 @@ const StockManagement: React.FC = () => {
             <Upload className="h-4 w-4 mr-2" />
             Import Excel
           </Button>
-          <Button className="pos-action-btn flex items-center">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Product
-          </Button>
+          <AddProductDialog />
         </div>
       </div>
 
@@ -173,7 +149,13 @@ const StockManagement: React.FC = () => {
                   <Edit className="h-4 w-4 mr-1" />
                   Edit
                 </Button>
-                <Button size="sm" variant="outline" className="text-destructive hover:text-destructive">
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="text-destructive hover:text-destructive"
+                  onClick={() => handleDeleteProduct(product.id)}
+                  disabled={deleteProductMutation.isPending}
+                >
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
