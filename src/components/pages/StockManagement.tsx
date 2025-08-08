@@ -15,6 +15,7 @@ import {
 import { Product } from '@/types/pos';
 import { useProducts, useDeleteProduct } from '@/hooks/useProducts';
 import AddProductDialog from '@/components/dialogs/AddProductDialog';
+import ExcelImportDialog from '@/components/dialogs/ExcelImportDialog';
 
 const StockManagement: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -71,10 +72,7 @@ const StockManagement: React.FC = () => {
         </div>
         
         <div className="flex flex-col sm:flex-row gap-3">
-          <Button variant="outline" className="flex items-center">
-            <Upload className="h-4 w-4 mr-2" />
-            Import Excel
-          </Button>
+          <ExcelImportDialog />
           <AddProductDialog />
         </div>
       </div>
