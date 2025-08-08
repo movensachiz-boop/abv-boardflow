@@ -44,25 +44,36 @@ export const useAddProduct = () => {
 
   return useMutation({
     mutationFn: async (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
-      console.log('Adding product:', product);
+      console.log('=== STARTING ADD PRODUCT ===');
+      console.log('Product data to add:', product);
+      console.log('Supabase client status:', !!supabase);
       
       try {
+        console.log('Attempting to insert product into Supabase...');
+        
+        const insertData = {
+          name: product.name,
+          code: product.code,
+          category: product.category,
+          size: product.size,
+          price: product.price,
+          stock: product.stock,
+          image: product.image || null,
+        };
+        
+        console.log('Insert data prepared:', insertData);
+        
         const { data, error } = await supabase
           .from('products')
-          .insert({
-            name: product.name,
-            code: product.code,
-            category: product.category,
-            size: product.size,
-            price: product.price,
-            stock: product.stock,
-            image: product.image || null,
-          })
+          .insert(insertData)
           .select()
           .single();
 
         if (error) {
-          console.error('Supabase error:', error);
+          console.error('=== SUPABASE INSERT ERROR ===');
+          console.error('Error details:', error);
+          console.error('Error message:', error.message);
+          console.error('Error code:', error.code);
           throw error;
         }
         
