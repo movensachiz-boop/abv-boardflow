@@ -104,17 +104,26 @@ const ExcelImportDialog: React.FC = () => {
 
       console.log('Excel data parsed:', jsonData);
 
+      // Filter out empty rows and rows without required fields
+      const validRows = jsonData.filter((row: any) => {
+        return row && 
+               typeof row === 'object' && 
+               (row.name || row.code || row.category || row.size || row.price || row.stock);
+      });
+
+      console.log('Filtered valid rows:', validRows.length, 'out of', jsonData.length);
+
       const importResult: ImportResult = {
         success: 0,
         errors: [],
-        total: jsonData.length
+        total: validRows.length
       };
 
-      for (let i = 0; i < jsonData.length; i++) {
-        const row = jsonData[i] as any;
+      for (let i = 0; i < validRows.length; i++) {
+        const row = validRows[i] as any;
         
         // Update progress
-        setProgress(((i + 1) / jsonData.length) * 100);
+        setProgress(((i + 1) / validRows.length) * 100);
         
         // Validate row
         const validation = validateProduct(row, i);
