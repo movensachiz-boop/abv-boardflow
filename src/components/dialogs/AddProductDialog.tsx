@@ -102,11 +102,14 @@ const AddProductDialog: React.FC = () => {
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Melamine">Melamine</SelectItem>
-                <SelectItem value="Superwood">Superwood</SelectItem>
-                <SelectItem value="PVC">PVC</SelectItem>
-                <SelectItem value="Fluted Panels">Fluted Panels</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
+                <SelectItem value="Board">Board</SelectItem>
+                <SelectItem value="Edging">Edging</SelectItem>
+                <SelectItem value="Quartz">Quartz</SelectItem>
+                <SelectItem value="Accessory">Accessory</SelectItem>
+                <SelectItem value="Hardware">Hardware</SelectItem>
+                <SelectItem value="Consumable">Consumable</SelectItem>
+                <SelectItem value="Service">Service</SelectItem>
+                <SelectItem value="Panel">Panel</SelectItem>
               </SelectContent>
             </Select>
           </div>

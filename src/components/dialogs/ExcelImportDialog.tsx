@@ -37,7 +37,7 @@ const ExcelImportDialog: React.FC = () => {
       {
         name: 'Example Product Name',
         code: 'PROD-001',
-        category: 'Melamine',
+        category: 'Board',
         size: '120x240 cm',
         price: 45.50,
         stock: 25,
@@ -62,8 +62,8 @@ const ExcelImportDialog: React.FC = () => {
       errors.push(`Row ${index + 2}: Product code is required`);
     }
     
-    if (!row.category || !['Melamine', 'Superwood', 'PVC', 'Fluted Panels', 'Other'].includes(row.category)) {
-      errors.push(`Row ${index + 2}: Category must be one of: Melamine, Superwood, PVC, Fluted Panels, Other`);
+    if (!row.category || !['Board', 'Edging', 'Quartz', 'Accessory', 'Hardware', 'Consumable', 'Service', 'Panel'].includes(row.category)) {
+      errors.push(`Row ${index + 2}: Category must be one of: Board, Edging, Quartz, Accessory, Hardware, Consumable, Service, Panel`);
     }
     
     if (!row.size || typeof row.size !== 'string') {

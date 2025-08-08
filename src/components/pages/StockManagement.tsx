@@ -24,7 +24,7 @@ const StockManagement: React.FC = () => {
   const { data: products = [], isLoading, error } = useProducts();
   const deleteProductMutation = useDeleteProduct();
 
-  const categories = ['all', 'Melamine', 'Superwood', 'PVC', 'Fluted Panels', 'Other'];
+  const categories = ['all', 'Board', 'Edging', 'Quartz', 'Accessory', 'Hardware', 'Consumable', 'Service', 'Panel'];
 
   const handleDeleteProduct = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this product?')) {

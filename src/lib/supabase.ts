@@ -27,7 +27,7 @@ export type Database = {
           id: string;
           name: string;
           code: string;
-          category: 'Melamine' | 'Superwood' | 'PVC' | 'Fluted Panels' | 'Other';
+          category: 'Board' | 'Edging' | 'Quartz' | 'Accessory' | 'Hardware' | 'Consumable' | 'Service' | 'Panel';
           size: string;
           price: number;
           stock: number;
