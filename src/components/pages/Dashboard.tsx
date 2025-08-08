@@ -16,8 +16,32 @@ const Dashboard: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-lg">Loading dashboard...</div>
+      <div className="space-y-6">
+        <div>
+          <div className="h-8 bg-muted animate-pulse rounded mb-2"></div>
+          <div className="h-4 bg-muted animate-pulse rounded w-2/3"></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="bg-card border rounded-lg p-6">
+              <div className="h-4 bg-muted animate-pulse rounded mb-4"></div>
+              <div className="h-8 bg-muted animate-pulse rounded mb-2"></div>
+              <div className="h-3 bg-muted animate-pulse rounded"></div>
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {[...Array(2)].map((_, i) => (
+            <div key={i} className="bg-card border rounded-lg p-6">
+              <div className="h-6 bg-muted animate-pulse rounded mb-4"></div>
+              <div className="space-y-3">
+                {[...Array(3)].map((_, j) => (
+                  <div key={j} className="h-4 bg-muted animate-pulse rounded"></div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
