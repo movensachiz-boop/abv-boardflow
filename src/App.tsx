@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import LoginPage from "@/components/pages/LoginPage";
 import Dashboard from "@/components/pages/Dashboard";
 import StockManagement from "@/components/pages/StockManagement";
+import QuotationManagement from "@/components/pages/QuotationManagement";
 import Layout from "@/components/layout/Layout";
 import NotFound from "./pages/NotFound";
 
@@ -49,6 +50,7 @@ const App = () => (
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="stock" element={<StockManagement />} />
+              <Route path="quotations" element={<QuotationManagement />} />
               <Route path="sales" element={<div className="text-center py-12"><h2 className="text-2xl font-bold">Sales Entry - Coming Soon</h2></div>} />
               <Route path="stocktaking" element={<div className="text-center py-12"><h2 className="text-2xl font-bold">Stocktaking - Coming Soon</h2></div>} />
               <Route path="reports" element={<div className="text-center py-12"><h2 className="text-2xl font-bold">Reports - Coming Soon</h2></div>} />

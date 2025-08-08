@@ -6,7 +6,8 @@ import {
   ShoppingCart, 
   ClipboardList, 
   FileText,
-  Home
+  Home,
+  Calculator
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
@@ -17,6 +18,7 @@ const Navigation: React.FC = () => {
   const navItems = [
     { to: '/dashboard', icon: Home, label: 'Dashboard', roles: ['admin', 'cashier', 'viewer'] },
     { to: '/sales', icon: ShoppingCart, label: 'Sales Entry', roles: ['admin', 'cashier'] },
+    { to: '/quotations', icon: Calculator, label: 'Quotations', roles: ['admin', 'cashier'] },
     { to: '/stock', icon: Package, label: 'Stock Management', roles: ['admin', 'cashier'] },
     { to: '/stocktaking', icon: ClipboardList, label: 'Stocktaking', roles: ['admin'] },
     { to: '/reports', icon: FileText, label: 'Reports', roles: ['admin', 'viewer'] },
